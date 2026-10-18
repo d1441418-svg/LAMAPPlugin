@@ -4,45 +4,74 @@
     function startTabsPlugin() {
         if (document.getElementById('lampa-custom-tabs-css')) return;
 
-        // Стилі для крутих карток-вкладок
         var css = `
+            .vip-tabs-wrap {
+                padding: 5px;
+            }
+            .vip-tabs-filters {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-bottom: 16px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            .vip-tabs-filter-btn {
+                padding: 8px 16px;
+                border-radius: 20px;
+                background: rgba(255, 255, 255, 0.08);
+                color: #cccccc;
+                font-size: 0.9em;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                border: 1px solid rgba(255, 255, 255, 0.08);
+            }
+            .vip-tabs-filter-btn.active {
+                background: #ffb703;
+                color: #000000;
+                border-color: #ffb703;
+            }
+            .vip-tabs-filter-btn.focus {
+                transform: scale(1.06);
+                border-color: #ffffff;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            }
             .vip-tabs-grid {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-                gap: 14px;
-                padding: 10px 5px;
+                grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+                gap: 12px;
             }
             .vip-tab-card {
                 position: relative;
-                border-radius: 16px;
-                padding: 20px 18px;
-                min-height: 95px;
+                border-radius: 14px;
+                padding: 16px;
+                min-height: 85px;
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
                 overflow: hidden;
                 border: 1px solid rgba(255, 255, 255, 0.12);
-                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-                transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+                transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
                 cursor: pointer;
             }
             .vip-tab-card__title {
-                font-size: 1.15em;
+                font-size: 1.08em;
                 font-weight: 800;
                 color: #ffffff;
                 z-index: 2;
-                letter-spacing: 0.3px;
             }
             .vip-tab-card__sub {
-                font-size: 0.82em;
-                color: rgba(255, 255, 255, 0.75);
+                font-size: 0.78em;
+                color: rgba(255, 255, 255, 0.78);
                 margin-top: 6px;
                 z-index: 2;
             }
             .vip-tab-card.focus {
                 transform: scale(1.05) translateY(-3px);
                 border-color: #ffffff;
-                box-shadow: 0 12px 28px rgba(0, 0, 0, 0.7), 0 0 18px rgba(255, 255, 255, 0.2);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.75), 0 0 15px rgba(255, 255, 255, 0.2);
             }
         `;
 
@@ -51,135 +80,178 @@
         style.innerHTML = css;
         document.head.appendChild(style);
 
-        // Список онлайн-вкладок (оновлюються автоматично з бази TMDB)
         var categories = [
+            // === 2026 РІК ===
             {
+                group: '2026',
                 title: 'Новинки 2026',
                 sub: 'Головні прем’єри року',
                 url: 'discover/movie?primary_release_year=2026&sort_by=popularity.desc',
                 bg: 'linear-gradient(135deg, #ff6b00, #ff0055)'
             },
             {
+                group: '2026',
+                title: 'Комедії 2026',
+                sub: 'Свіжі фільми для настрою',
+                url: 'discover/movie?with_genres=35&primary_release_year=2026&sort_by=popularity.desc',
+                bg: 'linear-gradient(135deg, #00b09b, #96c93d)'
+            },
+            {
+                group: '2026',
                 title: 'Жахи 2026',
                 sub: 'Нові хорори та містика',
                 url: 'discover/movie?with_genres=27&primary_release_year=2026&sort_by=popularity.desc',
                 bg: 'linear-gradient(135deg, #790909, #1f0505)'
             },
             {
-                title: 'Топ Комедії',
-                sub: 'Найкращі фільми для настрою',
-                url: 'discover/movie?with_genres=35&sort_by=popularity.desc',
-                bg: 'linear-gradient(135deg, #00b09b, #96c93d)'
-            },
-            {
-                title: 'Аніме Хіти',
-                sub: 'Японська анімація та новинки',
-                url: 'discover/tv?with_genres=16&with_original_language=ja&sort_by=popularity.desc',
-                bg: 'linear-gradient(135deg, #ec008c, #fc6767)'
-            },
-            {
-                title: 'Аніме Фільми',
-                sub: 'Повнометражні релізи',
-                url: 'discover/movie?with_genres=16&with_original_language=ja&sort_by=popularity.desc',
-                bg: 'linear-gradient(135deg, #8e2de2, #4a00e0)'
-            },
-            {
-                title: 'Крутий Екшен',
-                sub: 'Бойовики та блокбастери 2026',
+                group: '2026',
+                title: 'Екшен 2026',
+                sub: 'Нові бойовики та блокбастери',
                 url: 'discover/movie?with_genres=28&primary_release_year=2026&sort_by=popularity.desc',
                 bg: 'linear-gradient(135deg, #f12711, #f5af19)'
             },
             {
-                title: 'Жахи (Всі часи)',
-                sub: 'Найпопулярніші страшилки',
-                url: 'discover/movie?with_genres=27&sort_by=popularity.desc',
-                bg: 'linear-gradient(135deg, #434343, #000000)'
+                group: '2026',
+                title: 'Серіали 2026',
+                sub: 'Нові сезони та телепрем’єри',
+                url: 'discover/tv?first_air_date_year=2026&sort_by=popularity.desc',
+                bg: 'linear-gradient(135deg, #11998e, #38ef7d)'
+            },
+
+            // === ЖАНРИ ===
+            {
+                group: 'genres',
+                title: 'Топ Комедії',
+                sub: 'Найсмішніші фільми всіх часів',
+                url: 'discover/movie?with_genres=35&vote_count.gte=500&sort_by=popularity.desc',
+                bg: 'linear-gradient(135deg, #f7971e, #ffd200)'
             },
             {
-                title: 'Фантастика',
-                sub: 'Космос, майбутнє та технології',
+                group: 'genres',
+                title: 'Молодіжні Комедії',
+                sub: 'Приколи, вечірки та відрив',
+                url: 'discover/movie?with_genres=35&with_keywords=9713|6075&sort_by=popularity.desc',
+                bg: 'linear-gradient(135deg, #ff416c, #ff4b2b)'
+            },
+            {
+                group: 'genres',
+                title: 'Жахи та Скрімери',
+                sub: 'Найстрашніші фільми',
+                url: 'discover/movie?with_genres=27&vote_count.gte=300&sort_by=popularity.desc',
+                bg: 'linear-gradient(135deg, #232526, #414345)'
+            },
+            {
+                group: 'genres',
+                title: 'Крутий Екшен',
+                sub: 'Вибухи, бійки та перестрілки',
+                url: 'discover/movie?with_genres=28&vote_count.gte=500&sort_by=popularity.desc',
+                bg: 'linear-gradient(135deg, #cb2d3e, #ef473a)'
+            },
+            {
+                group: 'genres',
+                title: 'Фантастика і Космос',
+                sub: 'Майбутнє, технології та світи',
                 url: 'discover/movie?with_genres=878&sort_by=popularity.desc',
                 bg: 'linear-gradient(135deg, #00c6ff, #0072ff)'
             },
             {
-                title: 'Гострі Трилери',
-                sub: 'Напружений сюжет і детективи',
-                url: 'discover/movie?with_genres=53,9648&sort_by=popularity.desc',
+                group: 'genres',
+                title: 'Фентезі та Магія',
+                sub: 'Монстри, мечі та чарівні світи',
+                url: 'discover/movie?with_genres=14&sort_by=popularity.desc',
+                bg: 'linear-gradient(135deg, #6a3093, #a044ff)'
+            },
+            {
+                group: 'genres',
+                title: 'Кримінал і Мафія',
+                sub: 'Банди, пограбування та розбірки',
+                url: 'discover/movie?with_genres=80&sort_by=popularity.desc',
                 bg: 'linear-gradient(135deg, #141e30, #243b55)'
             },
             {
-                title: 'Топ Серіали 2026',
-                sub: 'Нові сезони та прем’єри',
-                url: 'discover/tv?first_air_date_year=2026&sort_by=popularity.desc',
-                bg: 'linear-gradient(135deg, #11998e, #38ef7d)'
-            }
-        ];
+                group: 'genres',
+                title: 'Гострі Трилери',
+                sub: 'Напруга до останньої хвилини',
+                url: 'discover/movie?with_genres=53&sort_by=popularity.desc',
+                bg: 'linear-gradient(135deg, #0f2027, #203a43, #2c5364)'
+            },
+            {
+                group: 'genres',
+                title: 'Детективи і Таємниці',
+                sub: 'Заплутані розслідування',
+                url: 'discover/movie?with_genres=9648&sort_by=popularity.desc',
+                bg: 'linear-gradient(135deg, #3a6186, #89253e)'
+            },
+            {
+                group: 'genres',
+                title: 'Пригоди',
+                sub: 'Подорожі, скарби та джунглі',
+                url: 'discover/movie?with_genres=12&sort_by=popularity.desc',
+                bg: 'linear-gradient(135deg, #134e5e, #71b280)'
+            },
+            {
+                group: 'genres',
+                title: 'Романтика і Любов',
+                sub: 'Історії про почуття та стосунки',
+                url: 'discover/movie?with_genres=10749&sort_by=popularity.desc',
+                bg: 'linear-gradient(135deg, #ff758c, #ff7eb3)'
+            },
 
-        // Створюємо вікно з картками вкладок
-        function openTabsModal() {
-            var container = $('<div class="vip-tabs-grid"></div>');
+            // === СПЕЦІАЛЬНА ТЕМАТИКА ===
+            {
+                group: 'themes',
+                title: 'Супергерої (Marvel / DC)',
+                sub: 'Комікси та суперсили',
+                url: 'discover/movie?with_keywords=9715&sort_by=popularity.desc',
+                bg: 'linear-gradient(135deg, #e52d27, #b31217)'
+            },
+            {
+                group: 'themes',
+                title: 'Зомбі та Апокаліпсис',
+                sub: 'Віруси, мутанти та кінець світу',
+                url: 'discover/movie?with_keywords=12377|4458&sort_by=popularity.desc',
+                bg: 'linear-gradient(135deg, #3c1053, #ad5389)'
+            },
+            {
+                group: 'themes',
+                title: 'Виживання',
+                sub: 'Дика природа, острови та пастки',
+                url: 'discover/movie?with_keywords=10349&sort_by=popularity.desc',
+                bg: 'linear-gradient(135deg, #1e3c72, #2a5298)'
+            },
+            {
+                group: 'themes',
+                title: 'Тачки та Перегони',
+                sub: 'Швидкість, дрифт і погоні',
+                url: 'discover/movie?with_keywords=830|6400&sort_by=popularity.desc',
+                bg: 'linear-gradient(135deg, #ff8008, #ffc837)'
+            },
 
-            categories.forEach(function (cat) {
-                var card = $(
-                    '<div class="vip-tab-card selector" style="background: ' + cat.bg + ';">' +
-                        '<div class="vip-tab-card__title">' + cat.title + '</div>' +
-                        '<div class="vip-tab-card__sub">' + cat.sub + '</div>' +
-                    '</div>'
-                );
-
-                card.on('hover:enter', function () {
-                    Lampa.Modal.close();
-                    Lampa.Activity.push({
-                        url: cat.url,
-                        title: cat.title,
-                        component: 'category_full',
-                        source: 'tmdb',
-                        card_type: true,
-                        page: 1
-                    });
-                });
-
-                container.append(card);
-            });
-
-            Lampa.Modal.open({
-                title: 'Вкладки та добірки',
-                html: container,
-                size: 'large',
-                onBack: function () {
-                    Lampa.Modal.close();
-                    Lampa.Controller.toggle('menu');
-                }
-            });
-        }
-
-        // Додаємо кнопку "Вкладки" у бічну панель (ліве меню)
-        var menuButton = $(
-            '<li class="menu__item selector" data-action="vip_tabs">' +
-                '<div class="menu__ico">' +
-                    '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
-                        '<rect x="3" y="3" width="7" height="7" rx="1.5"></rect>' +
-                        '<rect x="14" y="3" width="7" height="7" rx="1.5"></rect>' +
-                        '<rect x="14" y="14" width="7" height="7" rx="1.5"></rect>' +
-                        '<rect x="3" y="14" width="7" height="7" rx="1.5"></rect>' +
-                    '</svg>' +
-                '</div>' +
-                '<div class="menu__text">Вкладки</div>' +
-            '</li>'
-        );
-
-        menuButton.on('hover:enter', function () {
-            openTabsModal();
-        });
-
-        $('.menu .menu__list').eq(0).append(menuButton);
-    }
-
-    if (window.appready) {
-        startTabsPlugin();
-    } else {
-        Lampa.Listener.follow('app', function (e) {
-            if (e.type === 'ready') startTabsPlugin();
-        });
-    }
-})();
+            // === АНІМЕ ТА МУЛЬТФІЛЬМИ ===
+            {
+                group: 'anime',
+                title: 'Аніме Серіали (Хіти)',
+                sub: 'Найпопулярніші японські тайтли',
+                url: 'discover/tv?with_genres=16&with_original_language=ja&sort_by=popularity.desc',
+                bg: 'linear-gradient(135deg, #ec008c, #fc6767)'
+            },
+            {
+                group: 'anime',
+                title: 'Аніме Фільми',
+                sub: 'Повнометражні хіти Японії',
+                url: 'discover/movie?with_genres=16&with_original_language=ja&sort_by=popularity.desc',
+                bg: 'linear-gradient(135deg, #8e2de2, #4a00e0)'
+            },
+            {
+                group: 'anime',
+                title: 'Аніме 16+ / Еччі',
+                sub: 'Гаремники, романтика та фансервіс',
+                url: 'discover/tv?with_genres=16,10749&with_original_language=ja&sort_by=popularity.desc',
+                bg: 'linear-gradient(135deg, #ff0844, #ffb199)'
+            },
+            {
+                group: 'anime',
+                title: 'Мультфільми',
+                sub: 'Найкраща анімація (Pixar, DreamWorks)',
+                url: 'discover/movie?with_genres=16&without_original_language=ja&sort_by=popularity.desc',
+                bg: 'linear-gradient(135deg, #
